@@ -49,7 +49,7 @@ const OtpLogin = () => {
                                             <CustomInput  className='input-focus' onChange={handleChange} type="number" placeholder="Enter mobile number" name="phone" value={user.phone} />
                                             <CustomLine className='alert-line' >{error['phone']}</CustomLine>
                                         </FormGroup>
-                                        <CustomButton className='btn signup-btn' disabled={error['phone']} type="submit" block >Send OTP</CustomButton>
+                                        <CustomButton className='btn signup-btn' disabled={error['phone'] || !user.phone} type="submit" block >Send OTP</CustomButton>
                                     </CustomForm>
                                 }
                             </div>
