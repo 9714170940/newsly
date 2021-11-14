@@ -4,18 +4,17 @@ import OtpLogin from '../presentation/OtpLogin'
 import SignIn from '../presentation/Signin'
 import Signup from '../presentation/Signup'
 import Dashboard from "../presentation/Dashboard";
-import Error from '../presentation/Error'
+import { getParticularData } from '../utils/localstorage'
+import PrivateRoute from '../presentation/PrivateRoute'
 
 const Routing = () => {
+
+    const token = getParticularData('token')
 
     const routers = [
         {
             path: '/',
             components:Signup
-        },
-        {
-            path: '/dashboard/:uid',
-            components:Dashboard
         },
         {
             path: '/signup',
@@ -43,7 +42,7 @@ const Routing = () => {
                         <Route exact key={i} path={data.path} component={data.components}/>
                     )
                 })}
-                <Route path='' component={Error} />
+                <PrivateRoute isAuth={token} component={Dashboard} path="/dashboard/:uid" exact />
             </Switch>
         </Router>
     )

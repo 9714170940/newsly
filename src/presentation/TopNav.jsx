@@ -9,11 +9,12 @@ import {
 import {MdSearch, MdSettings} from 'react-icons/md';
 import {BsBellFill} from 'react-icons/bs';
 import firebase from '../firebase/config';
+import {CgMenuGridO} from 'react-icons/cg'
 
 const useStyles = makeStyles((theme) => ({
   topNavWrapper: {
     backgroundColor: "#fff",
-    padding: theme.spacing(2.25, 4),
+    padding: theme.spacing(2.25, 3),
     width: "calc(100% - 0px)",
     display: "flex",
     alignItems: "center",
@@ -24,13 +25,23 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "23px",
     display: "flex",
     alignItems: "center",
+    marginLeft:'2rem',
     justifyContent: "space-between",
-    padding: theme.spacing(1, 3),
+    padding: theme.spacing(1,3),
     width: "300px",
     "& svg": {
       fill: "#878787",
       cursor:'pointer',
     },
+  },
+  customToggle: {
+    color:'#5D00A9',
+    fontSize:'1.5rem'
+  },
+  customToggleDiv: {
+    padding: '4px',
+    border: '2px solid #5D00A9',
+    borderRadius: '5rem',
   },
   inputRoot: {
     fontSize: "14px",
@@ -42,14 +53,15 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  flexBox: {
+    display: "flex",
+    alignItems: "center",
+  }
 }));
 
-export const TopNav = () => {
+export const TopNav = ({toggleCollapsed}) => {
 
-  const [getName , setGetName] = useState([]);
   const [search , setSearch] = useState('');
-  const [display , setDisplay] = useState('');
-  const [pictures , setPictures] = useState('');
 
   const classes = useStyles();
 
@@ -72,11 +84,8 @@ export const TopNav = () => {
     firebase.auth().onAuthStateChanged((user)=>{
       if(user){
         console.log(user);
-        setPictures(user.photoURL);
-        setDisplay(user.displayName);
         firebase.firestore().collection('users').doc(user.uid).get().then((data)=>{
           console.log(data.data());
-          setGetName(data.data());
         }).catch((error)=>{
           console.log({error:'can not read data'});
         })
@@ -91,31 +100,25 @@ export const TopNav = () => {
     getUser();
   }, [])
 
-
-  let name;
-  if(getName){
-    name = <Box fontWeight="bold">{getName.Fullname}</Box>;
-  }else{
-    name = <Box fontWeight="bold">{display}</Box>
-  }
-
-
   return (
     <Box className={classes.topNavWrapper}>
-      <div className={classes.search}>
-        <InputBase
-          placeholder="Search here..."
-          onChange={(e)=>{setSearch(e.target.value)}}
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-          inputProps={{ "aria-label": "search" }}
-        />
-        <div className={classes.searchIcon} onClick={fetchSearchApi}>
-          <MdSearch />
+        <div className={classes.flexBox} >
+          <div className={classes.customToggleDiv} ><CgMenuGridO onClick={toggleCollapsed} className={classes.customToggle} /></div>
+          <div className={classes.search}>
+            <InputBase
+              placeholder="Search here..."
+              onChange={(e)=>{setSearch(e.target.value)}}
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ "aria-label": "search" }}
+            />
+            <div className={classes.searchIcon} onClick={fetchSearchApi}>
+              <MdSearch />
+            </div>
+          </div>
         </div>
-      </div>
       <Box className={classes.userDetails}>
         <BsBellFill style={{ color: "#878787", fontSize:'1.25rem' }} />
         <MdSettings style={{ color: "#878787", marginLeft: "10px" }} />
@@ -124,9 +127,9 @@ export const TopNav = () => {
           variant="body2"
           style={{ marginLeft: "30px", marginRight: "8px" }}
         >
-          {name}
+          {''}
         </Typography>
-        <img alt="userPic" style={{width:'2rem',borderRadius:'50%'}} src={pictures !== null?pictures:'./images/blank user.svg'} />
+        <img alt="userPic" style={{width:'2rem',borderRadius:'50%'}} src={'./images/blank user.svg'} />
       </Box>
     </Box>
   );
