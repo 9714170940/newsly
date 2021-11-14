@@ -1,9 +1,16 @@
 import React from 'react'
+import useSidebar from '../Components/sidebar'
+import Sidebar from './Sidebar'
+import { TopNav } from './TopNav'
 
 const Dashboard = () => {
+
+    const [toggle, toggleCollapsed] = useSidebar()
+
     return (
         <div>
-           Under construction... 
+            <TopNav toggle={toggle} toggleCollapsed={toggleCollapsed} />
+            <Sidebar toggle={toggle} />
         </div>
     )
 }

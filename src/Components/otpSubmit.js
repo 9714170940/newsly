@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux'
 import {setUserAuthId} from '../redux/actions/action'
 
 const initialState = {
-    phone: Number,
+    phone: '',
     otpCode: '',
     responseText: 'dfd',
     uid: 'vdd'
@@ -62,6 +62,7 @@ const useOtpSubmit = () => {
             // User signed in successfully.
             const user = result.user;
             console.log('user :', user)
+            localStorage.setItem('token',user.Aa)
             dispatch(setUserAuthId(user.Aa))
             setTimeout(() => {
                 history.push('/dashboard/'+user.uid)
