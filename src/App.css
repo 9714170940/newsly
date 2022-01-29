@@ -194,6 +194,12 @@
   color: #5D00A9!important;
 }
 
+/*-----------navbar----------------------------------------*/
+.navbar .MuiToolbar-regular{
+  display: flex!important;
+  justify-content: flex-end!important;
+  align-items: center!important;
+}
 
 
 

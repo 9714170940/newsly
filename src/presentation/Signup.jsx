@@ -10,7 +10,7 @@ import useSignup from '../Components/signup'
 
 const Signup = () => {
 
-    const [signup,handleSignup, formData, submitForm, error] = useSignup()
+    const [signup,handleSignup, formData, submitForm, handleGoogleSignIn, error] = useSignup()
 
     return (
         <div className="container-fluid signup-page-container" >
@@ -33,11 +33,11 @@ const Signup = () => {
                                     </FormGroup>
                                 )
                             })}
-                            <FormGroup className='margin-bottom' controlId="socialLogin" style={{ marginTop: '1.25rem' }}>
+                            <FormGroup className='margin-bottom mt-2' controlId="socialLogin">
                                 <CustomLabel label='Login With :' className="margin"/>
                                 <div className='social-login'>
-                                    <img src='./assets/icons8-google.svg' alt='google' onClick={'googleSign'}/>
-                                    <img src='./assets/facebook.svg' alt='facebook' onClick={'fbSign'}/>
+                                    <img src='./assets/icons8-google.svg' alt='google' onClick={handleGoogleSignIn} />
+                                    <img src='./assets/facebook.svg' alt='facebook'/>
                                 </div>
                             </FormGroup>
                             <NavLink className="nav-otp" to="/login-with-otp">Login with OTP ?</NavLink>

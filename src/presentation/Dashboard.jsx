@@ -1,18 +1,14 @@
-import React from 'react'
-import useSidebar from '../Components/sidebar'
-import Sidebar from './Sidebar'
-import { TopNav } from './TopNav'
+import React from "react";
+import Sidebar from "./Sidebar";
 
 const Dashboard = () => {
+  return (
+    <div>
+      <div>
+        <Sidebar/>
+      </div>
+    </div>
+  );
+};
 
-    const [toggle, toggleCollapsed] = useSidebar()
-
-    return (
-        <div>
-            <TopNav toggle={toggle} toggleCollapsed={toggleCollapsed} />
-            <Sidebar toggle={toggle} />
-        </div>
-    )
-}
-
-export default Dashboard
+export default Dashboard;

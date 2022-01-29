@@ -1,7 +1,4 @@
-
-const genericField = /^[^!-@[-`{-~£]+$/
-const validEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-const mobileRegex = /^(\+\d{1,3}[- ]?)?\d{10}$/
+import { genericField, mobileRegex, validEmail } from "./regex"
 
 const required = {
     fullName: 'Name required*',
