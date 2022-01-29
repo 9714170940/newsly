@@ -4,6 +4,8 @@ import { customValidation } from '../utils/customValidation';
 import { useHistory } from 'react-router';
 import {useDispatch} from 'react-redux'
 import {setUserAuthId} from '../redux/actions/action'
+import { mobileRegex } from '../utils/regex';
+import { decodeData } from '../utils/function';
 
 const initialState = {
     phone: '',
@@ -11,7 +13,6 @@ const initialState = {
     responseText: 'dfd',
     uid: 'vdd'
 }
-const mobileRegex = /^(\+\d{1,3}[- ]?)?\d{10}$/
 
 const useOtpSubmit = () => {
     const history = useHistory();
@@ -63,9 +64,17 @@ const useOtpSubmit = () => {
             const user = result.user;
             console.log('user :', user)
             localStorage.setItem('token',user.Aa)
-            dispatch(setUserAuthId(user.Aa))
+            const data = decodeData(user?.Aa)
+            const obj = {
+                id: data?.user_id,
+                authId: data?.user_id,
+                logged: data?.user_id ? true : false,
+                isLoginSuccess: data?.user_id ? true : false,
+                user: data
+            }
+            dispatch(setUserAuthId(obj))
             setTimeout(() => {
-                history.push('/dashboard/'+user.uid)
+                history.push('/dashboard')
             }, 1500);
 
             // ...

@@ -1,21 +1,23 @@
-import {addData, userAuthId} from '../../utils/constant'
+import {userAuthId} from '../../utils/constant'
 
-let initialState = {
-    users:[]
-}
-let authUserData = {}
-
-export const userList = (state = initialState, action) => {
-    switch (action.type) {
-       case addData:
-           return state 
-        default: return state
-    }
+let authUserData = {
+    isLogged: false,
+    verified: '',
+    authId: '',
+    isLoginSuccess: false,
+    user: {}
 }
 export const userAuth = (state = authUserData, action) => {
     switch (action.type) {
         case userAuthId:
-            return {...state,authId:action.payload} 
+            return {
+                ...state,
+                authId: action.payload.id,
+                verified: action.payload.authId,
+                isLogged: action.payload.logged,
+                isLoginSuccess: action.payload.isLoginSuccess,
+                user: action.payload.user
+            } 
          default: return state
      }
 }

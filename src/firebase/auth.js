@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import firebase from './config';
 
 export const captchaVerifier = (id,handleSubmit) => {
@@ -26,3 +27,8 @@ export const signInPhoneNumber = (data,verifier) => {
         return false;
     })
 }
+
+export const auth = firebase.auth()
+
+export const googleAuthProvider = new firebase.auth.GithubAuthProvider();
+export const facebookAuthProvider = new firebase.auth.FacebookAuthProvider();

@@ -1,5 +1,12 @@
 import {useState} from 'react'
+import firebase from 'firebase'
+import { auth } from '../firebase/auth'
 import { customValidation } from '../utils/customValidation'
+import { addParticularData } from '../utils/localstorage'
+import { useDispatch } from 'react-redux'
+import { setUserAuthId } from '../redux/actions/action'
+import { useHistory } from 'react-router'
+import { decodeData } from '../utils/function'
 
 const initialState = {
     email: '',
@@ -8,6 +15,8 @@ const initialState = {
 
 const useSignIn = () => {
 
+    const dispatch = useDispatch()
+    const history = useHistory()
     const [signIn, setSignIn] = useState(initialState)
     const [error, setError] = useState({})
 
@@ -39,7 +48,27 @@ const useSignIn = () => {
         console.log('signIn :', signIn)
     }
 
-    return [signIn, handleSignIn, handleSubmit, formData, error]
+    const handleGoogleSignIn = () => {
+        const provider = new firebase.auth.GoogleAuthProvider()
+        auth.signInWithPopup(provider).then((result) => {
+            addParticularData('token',result?.user?.Aa)
+            const data = decodeData(result?.user?.Aa)
+            const object = {
+                id: data?.user_id,
+                authId: data?.user_id,
+                logged: data?.user_id ? true : false,
+                isLoginSuccess: data?.user_id ? true : false,
+                user: data
+            }
+            dispatch(setUserAuthId(object))
+            console.log(`result`, result)
+            history.push('/dashboard/'+result?.user?.uid)
+        }).catch((error) => {
+            console.log('error :', error)
+        })
+    }
+
+    return [signIn, handleSignIn, handleSubmit, formData, handleGoogleSignIn, error]
 }
 
 export default useSignIn
