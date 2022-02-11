@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { isTokenExpired } from "../utils/function";
 import { setUserAuthId } from "../redux/actions/action";
 import { useDispatch } from "react-redux";
+import { logOut } from "../firebase/auth";
 
 const Sidebar = () => {
   const history = useHistory();
@@ -27,6 +28,7 @@ const Sidebar = () => {
       user: {},
     };
     dispatch(setUserAuthId(object));
+    logOut()
     history.push("/login");
   };
 

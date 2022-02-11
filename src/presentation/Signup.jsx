@@ -10,6 +10,7 @@ import useSignup from '../Components/signup'
 
 const Signup = () => {
 
+    // eslint-disable-next-line no-unused-vars
     const [signup,handleSignup, formData, submitForm, handleGoogleSignIn, error] = useSignup()
 
     return (

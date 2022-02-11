@@ -30,5 +30,7 @@ export const signInPhoneNumber = (data,verifier) => {
 
 export const auth = firebase.auth()
 
+export const logOut = async() => await auth.signOut()
+
 export const googleAuthProvider = new firebase.auth.GithubAuthProvider();
 export const facebookAuthProvider = new firebase.auth.FacebookAuthProvider();
