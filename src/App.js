@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import 'antd/dist/antd.css';
 import './App.css';
 import Routing from "./routers";
@@ -12,24 +12,37 @@ function App() {
 
   const token = getParticularData('token')
   const dispatch = useDispatch()
+  const [validate, setValidate] = useState(false)
+
+  console.log('data', decodeData(token))
 
   useEffect(() => {
     if(token){
-      const data =  decodeData(token)
+      validation()
+    }
+  // eslint-disable-next-line
+  },[token])
+
+  const validation = async() => {
+    try {
+      const data =  await decodeData(token)
       const object = {
         id: data?.user_id,
         authId: data?.user_id,
-        logged: data?.user_id ? true : false,
-        isLoginSuccess: data?.user_id ? true : false,
+        logged: !!data?.user_id,
+        isLoginSuccess: !!data?.user_id,
         user: data
     }
+      setValidate(object.isLoginSuccess)
       dispatch(setUserAuthId(object))
+    } catch (error) {
+      console.log('error :', error)
     }
-  },[dispatch, token])
+  }
 
   return (
     <>
-      <Routing/>
+      <Routing {...{validate}} />
     </>
   );
 }

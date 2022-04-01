@@ -1,12 +1,13 @@
 import { useState } from "react";
 import firebase from "firebase";
-import { setUserAuthId } from "../redux/actions/action";
+import { setUserAuthId, setUserId } from "../redux/actions/action";
 import { customValidation } from "../utils/customValidation";
 import { addParticularData } from "../utils/localstorage";
 import { useDispatch } from "react-redux";
 import { auth } from "../firebase/auth";
 import { decodeData } from "../utils/function";
 import { storeData } from "../firebase/firestore";
+import { encrypt } from "../utils/crypto";
 
 const initialState = {
   fullName: "",
@@ -33,13 +34,13 @@ const useSignup = () => {
     const userData = {
       full_name: fullName, 
       email, 
-      password: password, 
-      confirm_password: cPassword 
+      password: encrypt(password), 
+      confirm_password: encrypt(cPassword) 
     }
     Object.keys(signup).forEach((data) => {
       errorObject[data] = customValidation(data, signup[data]);
     });
-    if (!Object.values(errorObject).includes("")) {
+    if (Object.values(errorObject).includes("")) {
       console.log("done :", Object.values(errorObject));
       setError(errorObject);
       return;
@@ -49,9 +50,10 @@ const useSignup = () => {
       console.log("userCredentials :", response);
       if(response){
         await response.user?.sendEmailVerification({
-          url: 'http://localhost:3000/login?confirm_email=true'
+          url: `http://localhost:3000/login?confirm_email=${!!response.user?.uid}&auth_id=${response.user?.uid}`
         })
         await storeData('Users', response.user?.uid, userData)
+        dispatch(setUserId(response.user?.uid))
       }
       return response;
     } catch (error) {

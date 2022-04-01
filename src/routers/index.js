@@ -8,13 +8,13 @@ import { clearAllData, getParticularData } from '../utils/localstorage'
 import { isTokenExpired } from '../utils/function'
 import { useSelector } from 'react-redux'
 
-const Routing = () => {
+const Routing = ({validate}) => {
 
     const token = getParticularData('token')
     const isLogin = useSelector(({userAuth}) => userAuth?.isLoginSuccess)
 
     const validationSession = () => {
-        if (isLogin){
+        if (isLogin || validate){
             return true
         }else{
             clearAllData()
@@ -67,11 +67,13 @@ const Routing = () => {
         }
     ]
 
+    console.log('isTokenExpired(token)', isTokenExpired(token))
+
     const SelectComponents = (isAuth, path, redirectUrl, Component, props) => {
         if(isAuth){
-            return (!(isTokenExpired(token))) || validationSession() ? <Redirect to={`${redirectUrl}`} /> : <Component {...props}/>
+            return (!isTokenExpired(token)) || validationSession() ? <Redirect to={`${redirectUrl}`} /> : <Component {...props}/>
         }else{
-            return (!(isTokenExpired(token))) || validationSession() ? <Component {...props}/> : <Redirect to={`${redirectUrl}`}/>
+            return (!isTokenExpired(token)) || validationSession() ? <Component {...props}/> : <Redirect to={`${redirectUrl}`}/>
         }   
     }
 

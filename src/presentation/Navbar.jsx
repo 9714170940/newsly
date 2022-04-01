@@ -4,8 +4,10 @@ import { BsFillBellFill } from 'react-icons/bs'
 import "../style/navbar.css";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 const Navbar = () => {
+  const history = useHistory()
   const userDetails = useSelector(({ userAuth }) => userAuth?.user);
   const [isOpenProfile, setIsOpenProfile] = useState(null);
   const [profile, setProfile] = useState(userDetails?.picture);
@@ -23,6 +25,11 @@ const Navbar = () => {
       setProfile(userDetails?.picture);
     }
   }, [userDetails]);
+
+  const handleMenu = (path) => {
+    setIsOpenProfile(null)
+    history.push(`/dashboard/${path}`)
+  }
 
   return (
     <div className="navbar">
@@ -52,9 +59,9 @@ const Navbar = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem>Profile</MenuItem>
-          <MenuItem>My account</MenuItem>
-          <MenuItem>Logout</MenuItem>
+          <MenuItem onClick={() => handleMenu('profile')} >Profile</MenuItem>
+          <MenuItem onClick={() => handleMenu('my-account')}>My account</MenuItem>
+          <MenuItem onClick={() => handleMenu('updates')}>Updates</MenuItem> 
         </Menu>
       </div>
     </div>

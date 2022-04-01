@@ -1,7 +1,7 @@
 import { decodeToken } from 'react-jwt'
 
-export const decodeData = (token) => {
-    const data = decodeToken(token)
+export const decodeData = async(token) => {
+    const data = await decodeToken(token)
     return data
 }
 

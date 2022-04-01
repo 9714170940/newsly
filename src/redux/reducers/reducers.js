@@ -1,4 +1,4 @@
-import {userAuthId} from '../../utils/constant'
+import {userAuthId, user_id} from '../../utils/constant'
 
 let authUserData = {
     isLogged: false,
@@ -7,6 +7,12 @@ let authUserData = {
     isLoginSuccess: false,
     user: {}
 }
+
+let fireStore = {
+    id: '',
+    data:{}
+}
+
 export const userAuth = (state = authUserData, action) => {
     switch (action.type) {
         case userAuthId:
@@ -20,4 +26,15 @@ export const userAuth = (state = authUserData, action) => {
             } 
          default: return state
      }
+}
+
+export const userData = (state = fireStore, action) => {
+    switch (action.type) {
+        case user_id:
+            return {
+                ...state,
+                id: action.payload
+            }
+        default: return state
+    }
 }

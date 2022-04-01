@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { setUserAuthId } from "../redux/actions/action";
 import { useHistory } from "react-router";
 import { decodeData } from "../utils/function";
+import { decrypt } from "../utils/crypto";
+import { retriveData } from "../firebase/firestore";
 
 const initialState = {
   email: "",
@@ -19,6 +21,7 @@ const useSignIn = () => {
   const history = useHistory();
   const [signIn, setSignIn] = useState(initialState);
   const [error, setError] = useState({});
+  const [loader, setLoader] = useState(false);
 
   const handleSignIn = ({ target }) => {
     const { name, value } = target;
@@ -27,25 +30,41 @@ const useSignIn = () => {
   };
 
   const fetchCurrentUser = async () => {
+    setLoader(true);
     try {
       const isConfirmingEmail = urlParams.get("confirm_email");
+      const authId = urlParams.get("auth_id");
+      const data = await retriveData("Users", authId);
       if (!!isConfirmingEmail) {
-        const response = await auth.signInWithEmailAndPassword()
-        if(response?.user){
-          console.log('response', response);
+        const email = data.email;
+        const password = decrypt(data.password);
+        const response = await auth.signInWithEmailAndPassword(email, password);
+        if (response?.user) {
+          setLoader(false)
+          addParticularData("token", response?.user?.Aa);
+          const data = decodeData(response?.user?.Aa);
+          const obj = {
+            id: data?.user_id,
+            authId: data?.user_id,
+            logged: data?.user_id ? true : false,
+            isLoginSuccess: data?.user_id ? true : false,
+            user: data,
+          };
+          dispatch(setUserAuthId(obj));
         }
       }
     } catch (error) {
-      console.log("error :", error?.code);
+      setLoader(false)
+      console.log("error :", error);
     }
   };
 
-  useEffect(()=>{
-    if(urlParams){
+  useEffect(() => {
+    if (urlParams) {
       fetchCurrentUser();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const formData = [
     {
@@ -85,7 +104,7 @@ const useSignIn = () => {
         };
         dispatch(setUserAuthId(object));
         console.log(`result`, result);
-        history.push("/dashboard/" + result?.user?.uid);
+        history.push("/dashboard/");
       })
       .catch((error) => {
         console.log("error :", error);
@@ -99,6 +118,7 @@ const useSignIn = () => {
     formData,
     handleGoogleSignIn,
     error,
+    loader
   ];
 };
 
